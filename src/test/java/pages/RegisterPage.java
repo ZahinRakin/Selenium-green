@@ -17,17 +17,32 @@ public class RegisterPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(3));
     }
 
-    public void enterUsername(String username) {
-        WebElement usernameField = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.id("username"))
+    public void clickCreateAccountBtn() {
+        WebElement createAccountLink = wait.until(
+                ExpectedConditions.elementToBeClickable(By.linkText("Create new account"))
         );
-        usernameField.clear();
-        usernameField.sendKeys(username);
+        createAccountLink.click();
+    }
+
+    public void enterFirstName(String firstName){
+        WebElement firstNameField = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.id("user_first_name"))
+        );
+        firstNameField.clear();
+        firstNameField.sendKeys(firstName);
+    }
+
+    public void enterLastname(String lastName){
+        WebElement lastNameField = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.id("user_last_name"))
+        );
+        lastNameField.clear();
+        lastNameField.sendKeys(lastName);
     }
 
     public void enterEmail(String email) {
         WebElement emailField = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.id("email"))
+                ExpectedConditions.visibilityOfElementLocated(By.id("user_email"))
         );
         emailField.clear();
         emailField.sendKeys(email);
@@ -35,23 +50,24 @@ public class RegisterPage {
 
     public void enterPassword(String password) {
         WebElement passwordField = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.id("password"))
+                ExpectedConditions.visibilityOfElementLocated(By.id("user_password"))
         );
         passwordField.clear();
         passwordField.sendKeys(password);
     }
 
-    public void clickRegisterButton() {
-        WebElement registerButton = wait.until(
-                ExpectedConditions.elementToBeClickable(By.id("register"))
+    public void enterPasswordConfirmation(String passwordConfirmation) {
+        WebElement passwordConfirmationField = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.id("user_password_confirmation"))
         );
-        registerButton.click();
+        passwordConfirmationField.clear();
+        passwordConfirmationField.sendKeys(passwordConfirmation);
     }
 
-    public String getErrorMessage() {
-        WebElement errorMsg = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.className("error-message"))
+    public void clickRegisterButton() {
+        WebElement registerButton = wait.until(
+                ExpectedConditions.elementToBeClickable(By.cssSelector("button"))
         );
-        return errorMsg.getText();
+        registerButton.click();
     }
 }
