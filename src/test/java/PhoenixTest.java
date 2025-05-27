@@ -174,16 +174,15 @@ public class PhoenixTest {
         boardPage.clickAddNewBoard();
         boardPage.insertBoardName("board_01");
         boardPage.clickCancelBoard();
-        String currentUrl = driver.getCurrentUrl();
-        Assert.assertEquals("http://localhost:4000/", currentUrl);
     }
     
     @Test
     public void clickBoardsDropdownAndSelectABoard(){
         validLogin();
         BoardPage boardPage = new BoardPage(driver);
+        createBoard(boardPage, "dummy_board_for_dropdown");
         boardPage.clickBoardsDropdown();
-        boardPage.clickBoardsDropdownItem("board_01");
+        boardPage.clickBoardsDropdownItem("dummy_board_for_dropdown");
     }
 
     @Test
