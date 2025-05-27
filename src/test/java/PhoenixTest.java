@@ -62,18 +62,22 @@ public class PhoenixTest {
         cardPage.clickAddCardButton();
         try { Thread.sleep(50); } catch (InterruptedException ignored) {}
     }
+
+    private void registerUser(RegisterPage registerPage, String firstName, String lastName, String email, String password) {
+        registerPage.clickRegisterUser();
+        registerPage.enterFirstName(firstName);
+        registerPage.enterLastname(lastName);
+        registerPage.enterEmail(email);
+        registerPage.enterPassword(password);
+        registerPage.enterPasswordConfirmation(password);
+        registerPage.clickRegisterButton();
+    }
     // --- REGISTER PAGE TESTS ---//
 
     @Test
     public void registerWithValidDataSucceeds() {
         RegisterPage registerPage = new RegisterPage(driver);
-        registerPage.clickRegisterUser();
-        registerPage.enterFirstName("Zahin");
-        registerPage.enterLastname("Abdullah Rakin");
-        registerPage.enterEmail("zahinabdullahrakin@gmail.com");
-        registerPage.enterPassword("12345678");
-        registerPage.enterPasswordConfirmation("12345678");
-        registerPage.clickRegisterButton();
+        registerUser(registerPage, "Zahin", "Rakin", "zahinabdullahrakin@gmail.com", "12345678");
     }
     @Test
     public void registerWithInsufficientDataDoesNothing() {
@@ -192,10 +196,13 @@ public class PhoenixTest {
 
     @Test
     public void addAnotherMemberToBoard() {
+        RegisterPage registerPage = new RegisterPage(driver);
+        registerUser(registerPage, "Ridoan", "Ryene", "ridoanislamryene@gmail.com", "12345678");
+
         validLogin();
         BoardPage boardPage = new BoardPage(driver);
         createBoard(boardPage, "test_user_addition");
-        // boardPage.selectBoard("test_user_addition");
+
 
         UserPage userPage = new UserPage(driver);
         userPage.clickAddNewUser();
@@ -203,7 +210,7 @@ public class PhoenixTest {
         userPage.clickCancel();
 
         userPage.clickAddNewUser();
-        userPage.insertUserEmail("zahinabdullahrakin@gmail.com");
+        userPage.insertUserEmail("ridoanislamryene@gmail.com");
         userPage.clickAddUserButton();
         try { Thread.sleep(500); } catch (InterruptedException ignored) {}
     }
