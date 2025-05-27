@@ -2,7 +2,7 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.JavascriptExecutor;
+// import org.openqa.selenium.JavascriptExecutor;
 
 public class LoginPage {
     private final WebDriver driver;
@@ -31,16 +31,21 @@ public class LoginPage {
                 .click();
     }
 
-    public void clearAutofilledFields() {
-        ((JavascriptExecutor) driver).executeScript(
-                "document.getElementById('user_email').value='';" +
-                        "document.getElementById('user_password').value='';"
-        );
-    }
+    // public void clearAutofilledFields() {
+    //     ((JavascriptExecutor) driver).executeScript(
+    //             "document.getElementById('user_email').value='';" +
+    //                     "document.getElementById('user_password').value='';"
+    //     );
+    // }
 
     public void login(String email, String password) {
         insertEmail(email);
         insertPassword(password);
         clickLogin();
+    }
+
+    public void goToLoginPage() {
+        driver.get("http://localhost:4000/sign_in");
+        // clearAutofilledFields();
     }
 }

@@ -17,6 +17,10 @@ public class RegisterPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(3));
     }
 
+    public void goToRegisterPage() {
+        driver.get("http://localhost:4000/sign_up");
+    }
+
     public void clickCreateAccountBtn() {
         WebElement createAccountLink = wait.until(
                 ExpectedConditions.elementToBeClickable(By.linkText("Create new account"))

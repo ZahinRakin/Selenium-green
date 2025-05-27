@@ -16,7 +16,9 @@ public class CardPage {
     }
 
     public void clickAddCard() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Add a new card..."))).click();
+        // This targets the first real list (ignores the "add-new" list at the end)
+        By addCardButton = By.cssSelector(".list:not(.add-new) footer .add-new");
+        wait.until(ExpectedConditions.elementToBeClickable(addCardButton)).click();
     }
 
     public void insertCardName(String cardName){
@@ -24,18 +26,21 @@ public class CardPage {
     }
 
     public void clickAddCardButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.cssSelector("#new_card_form button[type='submit']")))).click();
     }
 
     public void clickCancelCardButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("cancel"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.cssSelector("#new_card_form a")))).click();
     }
 
     //--------------------------------------------------//
     //                  Card Modal                      //
     //--------------------------------------------------//
     public void CardModalOpen(){
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#card_3 > .card-content"))).click();
+        By firstCardSelector = By.cssSelector(".lists-wrapper .list:not(.add-new) .cards-wrapper .card .card-content");
+
+        WebElement firstCard = wait.until(ExpectedConditions.elementToBeClickable(firstCardSelector));
+        firstCard.click();
     }
 
     public void CardModalCross() {
@@ -55,10 +60,10 @@ public class CardPage {
         input.sendKeys(newCardName);
     }
 
-    public void enterDescription(){
+    public void enterDescription(String description){
         WebElement textarea = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("textarea:nth-child(2)")));
         textarea.clear();
-        textarea.sendKeys("insert description");
+        textarea.sendKeys(description);
     }
 
     public void clickSaveCardButton() {
@@ -105,15 +110,11 @@ public class CardPage {
     //--------------------------------------------------//
     //                      Comments                    //
     //--------------------------------------------------//
-    public void insertComment(){
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("textarea"))).sendKeys("comment 1");
+    public void insertComment(String comment){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("textarea"))).sendKeys(comment);
     }
 
     public void saveComment(){
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button"))).click();
-    }
-
-    public void clickCardModalCross(){
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".fa-close"))).click();
     }
 }

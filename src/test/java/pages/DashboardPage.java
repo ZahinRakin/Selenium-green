@@ -20,8 +20,12 @@ public class DashboardPage {
     }
 
     //basic methods
+    public void goToDashboardPage() {
+        driver.get("http://localhost:4000/");
+    }
     public void clickLogout() {
-        driver.findElement(By.cssSelector("#crawler-sign-out > span")).click(); // updated.
+        By logoutButton = By.cssSelector("#crawler-sign-out");
+        wait.until(ExpectedConditions.elementToBeClickable(logoutButton)).click();
     }
     public void clickPhoenixLogo(){
         wait.until(ExpectedConditions.elementToBeClickable(phoneixLogo)).click();

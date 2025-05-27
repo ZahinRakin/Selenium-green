@@ -21,32 +21,35 @@ public class BoardPage {
     public void clickAddNewBoard() {
         wait.until(ExpectedConditions.elementToBeClickable(By.id("add_new_board"))).click();
     }
+    
     public void insertBoardName(String boardName) {
         driver.findElement(By.id("board_name")).sendKeys(boardName);
     }
+    
     public void clickCreateBoard() {
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button"))).click();
     }
+    
     public void clickCancelBoard() {
         wait.until(ExpectedConditions.elementToBeClickable(By.linkText("cancel"))).click();
     }
 
-    public void clickBoard() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#\\31-board_1 h4"))).click();
-    }
-    public void gotoBoard(String boardId) {
+    public void gotoBoard(String boardId) {//1-board_01
         driver.get("http://localhost:4000/boards/" + boardId);
-        driver.manage().window().setSize(new org.openqa.selenium.Dimension(914, 1063));
     }
+    
     //------------------------------------//
     //       Boards dropdown methods      //
     //------------------------------------//
+    
     public void clickBoardsDropdown() {
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#boards_nav span"))).click();
     }
+    
     public void clickBoardsDropdownItem(String item) { //name of the board
         wait.until(ExpectedConditions.elementToBeClickable(By.linkText(item))).click();
     }
+    
     public void clickViewAllBoards() {
         wait.until(ExpectedConditions.elementToBeClickable(By.linkText("View all boards"))).click();
     }
