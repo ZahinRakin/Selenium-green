@@ -2,11 +2,12 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-
+import java.util.List;
 
 
 public class BoardPage {
@@ -34,10 +35,6 @@ public class BoardPage {
         wait.until(ExpectedConditions.elementToBeClickable(By.linkText("cancel"))).click();
     }
 
-    public void gotoBoard(String boardId) {//1-board_01
-        driver.get("http://localhost:4000/boards/" + boardId);
-    }
-    
     //------------------------------------//
     //       Boards dropdown methods      //
     //------------------------------------//

@@ -17,7 +17,7 @@ public class RegisterPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(3));
     }
 
-    public void goToRegisterPage() {
+    public void clickRegisterUser() {
         driver.get("http://localhost:4000/sign_up");
     }
 

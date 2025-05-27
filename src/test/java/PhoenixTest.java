@@ -15,12 +15,6 @@ import pages.RegisterPage;
 import java.time.Duration;
 
 public class PhoenixTest {
-
-    //----------------- variables for the tests methods ----------------//
-    private String boardID = "1-board_01";
-
-
-    //----------------- WebDriver and WebDriverWait ----------------//
     private WebDriver driver;
     private WebDriverWait wait;
 
@@ -37,12 +31,43 @@ public class PhoenixTest {
     public void tearDown() {
         if (driver != null) driver.quit();
     }
+
+    //repetitive tasks in the tests
+    private void createBoard(BoardPage boardPage, String boardName) {
+        boardPage.clickAddNewBoard();
+        boardPage.insertBoardName(boardName);
+        boardPage.clickCreateBoard();
+        try { Thread.sleep(50); } catch (InterruptedException ignored) {}
+    }
+
+    private void validLogin(){
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.goToLoginPage();
+        loginPage.insertEmail("john@phoenix-trello.com");
+        loginPage.insertPassword("12345678");
+        loginPage.clickLogin();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("add_new_board")));
+    }
+
+    private void createList(ListPage listPage, String listName) {
+        listPage.clickAddList();
+        listPage.insertListName(listName);
+        listPage.clickAddListButton();
+        try { Thread.sleep(50); } catch (InterruptedException ignored) {}
+    }
+
+    private void createCard(CardPage cardPage, String cardName) {
+        cardPage.clickAddCard();
+        cardPage.insertCardName(cardName);
+        cardPage.clickAddCardButton();
+        try { Thread.sleep(50); } catch (InterruptedException ignored) {}
+    }
     // --- REGISTER PAGE TESTS ---//
 
     @Test
     public void registerWithValidDataSucceeds() {
         RegisterPage registerPage = new RegisterPage(driver);
-        registerPage.goToRegisterPage();
+        registerPage.clickRegisterUser();
         registerPage.enterFirstName("Zahin");
         registerPage.enterLastname("Abdullah Rakin");
         registerPage.enterEmail("zahinabdullahrakin@gmail.com");
@@ -53,7 +78,7 @@ public class PhoenixTest {
     @Test
     public void registerWithInsufficientDataDoesNothing() {
         RegisterPage registerPage = new RegisterPage(driver);
-        registerPage.goToRegisterPage();
+        registerPage.clickRegisterUser();
         registerPage.enterEmail("rsrsrsrakin87@gmail.com");
         registerPage.enterPassword("12345678");
         registerPage.enterPasswordConfirmation("12345678");
@@ -101,14 +126,6 @@ public class PhoenixTest {
         Assert.assertEquals(urlBefore, urlAfter); // URL should not change
     }
 
-    public void validLogin(){
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.goToLoginPage();
-        loginPage.insertEmail("john@phoenix-trello.com");
-        loginPage.insertPassword("12345678");
-        loginPage.clickLogin();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("add_new_board")));
-    }
 
     // --- DASHBOARD PAGE TESTS ---
     @Test
@@ -117,6 +134,7 @@ public class PhoenixTest {
         DashboardPage dashboardPage = new DashboardPage(driver);
         dashboardPage.clickLogout();
     }
+
     @Test
     public void clickPhoenixLogoNavigatesToDashboard() {
         validLogin();
@@ -144,6 +162,7 @@ public class PhoenixTest {
         String currentUrl = driver.getCurrentUrl();
         Assert.assertNotEquals("http://localhost:4000/", currentUrl);
     }
+
     @Test
     public void clickCreateBoardButCancel(){
         validLogin();
@@ -175,7 +194,8 @@ public class PhoenixTest {
     public void addAnotherMemberToBoard() {
         validLogin();
         BoardPage boardPage = new BoardPage(driver);
-        boardPage.gotoBoard(boardID);
+        createBoard(boardPage, "test_user_addition");
+        // boardPage.selectBoard("test_user_addition");
 
         UserPage userPage = new UserPage(driver);
         userPage.clickAddNewUser();
@@ -192,27 +212,25 @@ public class PhoenixTest {
     public void createList() {
         validLogin();
         BoardPage boardPage = new BoardPage(driver);
-        boardPage.gotoBoard(boardID);
+        createBoard(boardPage, "test_list_creation");
+        // boardPage.selectBoard("test_list_creation");
 
         ListPage listPage = new ListPage(driver);
         listPage.clickAddList();
         listPage.insertListName("not_the_list_name_i_want");
         listPage.clickCancelButton();
-        listPage.clickAddList();
-        listPage.insertListName("test_create_list");
-        listPage.clickAddListButton();
+
+        createList(listPage, "list_created_successfully");
     }
 
     @Test
     public void changeListName(){
         validLogin();
         BoardPage boardPage = new BoardPage(driver);
-        boardPage.gotoBoard(boardID);
+        createBoard(boardPage, "test_changing_list_name");
+        // boardPage.selectBoard("test_changing_list_name");
         ListPage listPage = new ListPage(driver);
-        listPage.clickAddList();
-        listPage.insertListName("name_before_change");
-        listPage.clickAddListButton();
-        try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+        createList(listPage, "name_before_change");
         // Now change the name of the list
         listPage.clickListTitle("name_before_change");
         listPage.updateListName("name_after_change");
@@ -226,16 +244,18 @@ public class PhoenixTest {
         validLogin();
 
         BoardPage boardPage = new BoardPage(driver);
-        boardPage.gotoBoard(boardID);
+        createBoard(boardPage, "test_card_creation");
+        // boardPage.selectBoard("test_card_creation");
+
+        ListPage listPage = new ListPage(driver);
+        createList(listPage, "dummy_list");
 
         CardPage cardPage = new CardPage(driver);
         cardPage.clickAddCard();
         cardPage.insertCardName("not_the_card_name_i_want");
         cardPage.clickCancelCardButton();
 
-        cardPage.clickAddCard();
-        cardPage.insertCardName("card_01");
-        cardPage.clickAddCardButton();
+        createCard(cardPage, "card_created_successfully");
     }
 
     @Test
@@ -243,13 +263,15 @@ public class PhoenixTest {
         validLogin();
 
         BoardPage boardPage = new BoardPage(driver);
-        boardPage.gotoBoard(boardID);
+        createBoard(boardPage, "modal_test");
+        // boardPage.selectBoard("modal_test");
+
+        ListPage listPage = new ListPage(driver);
+        createList(listPage, "dummy_list");
 
         CardPage cardPage = new CardPage(driver);
-        cardPage.clickAddCard();
-        cardPage.insertCardName("card_for_modal_test");
-        cardPage.clickAddCardButton();
-        try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+        createCard(cardPage, "card_for_modal_test");
+
         cardPage.CardModalOpen();
         cardPage.CardModalCross();
     }
@@ -258,9 +280,15 @@ public class PhoenixTest {
     public void cardAddComment(){
         validLogin();
         BoardPage boardPage = new BoardPage(driver);
-        boardPage.gotoBoard(boardID);
+        createBoard(boardPage, "commenting_test");
+        // boardPage.selectBoard("commenting_test");
+
+        ListPage listPage = new ListPage(driver);
+        createList(listPage, "dummy_list");
 
         CardPage cardPage = new CardPage(driver);
+        createCard(cardPage, "card_for_commenting_test");
+
         cardPage.CardModalOpen();
         cardPage.insertComment("testing commenting in the card");
         cardPage.saveComment();
@@ -271,9 +299,15 @@ public class PhoenixTest {
     public void clickMembersButton(){
         validLogin();
         BoardPage boardPage = new BoardPage(driver);
-        boardPage.gotoBoard(boardID);
+        createBoard(boardPage, "members_button_test_board");
+        // boardPage.selectBoard("members_button_test_board");
+
+        ListPage listPage = new ListPage(driver);
+        createList(listPage, "dummy_list");
 
         CardPage cardPage = new CardPage(driver);
+        createCard(cardPage, "card_for_members_button_test_board");
+
         cardPage.CardModalOpen();
         cardPage.clickMembersButton();
         cardPage.clickMembersCross();
@@ -284,9 +318,15 @@ public class PhoenixTest {
     public void selectTagsColor(){
         validLogin();
         BoardPage boardPage = new BoardPage(driver);
-        boardPage.gotoBoard(boardID);
+        createBoard(boardPage, "select_tags_color_test_board");
+        // boardPage.selectBoard("select_tags_color_test_board");
+
+        ListPage listPage = new ListPage(driver);
+        createList(listPage, "dummy_list");
 
         CardPage cardPage = new CardPage(driver);
+        createCard(cardPage, "card_for_tags_color_test_board");
+
         cardPage.CardModalOpen();
         cardPage.clickTagsButton();
         cardPage.selectTagColor();
@@ -298,9 +338,14 @@ public class PhoenixTest {
     public void editCard(){
         validLogin();
         BoardPage boardPage = new BoardPage(driver);
-        boardPage.gotoBoard(boardID);
+        createBoard(boardPage, "editing_card");
+        // boardPage.selectBoard("editing_card");
+
+        ListPage listPage = new ListPage(driver);
+        createList(listPage, "dummy_list");
 
         CardPage cardPage = new CardPage(driver);
+        createCard(cardPage, "card_for_editing_card");
         cardPage.CardModalOpen();
 
         cardPage.clickEditCard();
@@ -320,9 +365,15 @@ public class PhoenixTest {
     public void deleteCard(){
         validLogin();
         BoardPage boardPage = new BoardPage(driver);
-        boardPage.gotoBoard(boardID);
+        createBoard(boardPage, "test_deleting_card");
+        // boardPage.selectBoard("test_deleting_card");
+
+        ListPage listPage = new ListPage(driver);
+        createList(listPage, "dummy_list");
 
         CardPage cardPage = new CardPage(driver);
+        createCard(cardPage, "card_will_be_deleted");
+
         cardPage.CardModalOpen();
         cardPage.clickDeleteCardButton();
     }
